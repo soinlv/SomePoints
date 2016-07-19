@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+class Test {
+    class Card {
+        int value;
+        String key;
+        public Card(String key, int value) {
+            this.key = key
+            this.value = value;
+        }
+	}
+    public int maxScore(String[] front, String[] back) {
+        Card[] cards = new Card[front.length];
+        for(int i = 0; i < front.length; i++) {
+            cards[i] = new Card(back[i], Integer.parseInt(front[i]));
+        }
+        Arrays.sort(cards, new Comparator(){
+            public int compare(Card e1, Card e2) {
+                return e2.value - e1.value;
+            }
+        }); 
+        Set<Integer> set = new HashSet<>();
+        int max = 0;
+        for (int i = 0; i < cards.length; i++) {
+            if (set.contians(i)) continue;
+            for (int j = i + 1; j < cards.length; j++) {
+                if (set.contains(j)) continue;
+                if (cards[i].key.reverse().equals(cards[j].key)){
+                    max += cards[i].value + cards[j].value;
+                    set.add(i); 
+                    set.add(j);
+                }
+            }
+        }
+        for (int i = 0; i < cards.length; i++) {
+            if (!set.contains(i) && cards[i].key.reverse().equals(cards[i].key)) {
+	            max += cards[i].value;
+            }
+        }
+        return max;
+    }
+    public static void main(String [] args) throws Exception{
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(System.in));
+        String str = in.readLine();
+        String[] front = str.split(",");
+        String str2 = in.readLine();
+        String[] back = str.split(",");
+        Test test = new Test();
+        System.out.println(test.maxScore(front, back));
+    }
+}
